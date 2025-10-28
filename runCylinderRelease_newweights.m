@@ -8,12 +8,28 @@ T = 1;  % Length of time interval.
 tarr = [0:T/100:T];  % Array of time points in the interval 0 to T.
                      % The default is equally spaced 101 points including 0 and T.
 
+% Weights for Simpson's rule
+weights = zeros(M, N);
+n = N/2;
+m = M/2;
+for i=1:n
+    weights(2*i, 1) = 2 * 4 * (2*i - 1);
+    weights(2*i + 1, 1) = 2 * 2 * (2*i);
+    for j=1:m
+        weights(2*i, 2*j) = 4 * 4 * (2*i - 1);
+        weights(2*i, 2*j + 1) = 4 * 2 * (2*i - 1);
+        weights(2*i + 1, 2*j) = 2 * 4 * (2*i);
+        weights(2*i + 1, 2*j + 1) = 2 * 2 * (2*i);
+    end
+end
+
 % Initial concentration is constant inside. 
 S = 0;
-n = N/2;
-m=M/2;
-for i=1:n
-    S = S + (4 * (2*i - 1) + 2 * (2*i)) * (4 * m + 2 * m);
+
+for i=1:N
+    for j=1:M
+        S = S + weights(i, j) * 1;
+    end
 end
 S = 4*pi*R^2*h/(9*N^2*M) * S;
 C0=1/S;
@@ -37,25 +53,24 @@ xt=xt';
 xt = reshape(xt, (N+1), (M+1), length(tarr));
 
 % Fraction of quantity released.
-% Qdot = -2 \int_0^h \int_0^R c(r, z, t) 2 pi r dr dz
+% Q = -2 \int_0^h \int_0^R c(r, z, t) 2 pi r dr dz
 % Use Simpson's rule.Assumes N, M are even.
 % Let n=N/2, m=M/2.
 % For each t, Q is the fraction remaining in the cylinder
 % so Qt(t) should be 1 - Q
-Qt = zeros(length(tarr) - 1, 1); % Array of fraction released
-Q = 0;
 n = N/2;
-m=M/2;
+m = M/2;
+
+Qt = zeros(length(tarr), 1);
 for t=1:length(tarr)
-   Q = 0;
-    for i=1:n
-        Q = Q + 2 * (4 * (2*i - 1) * xt(2*i, 1, t) + 2 * (2*i) * xt(2*i + 1, 1, t));
-        for j=1:m
-            Q = Q + 4 * (2*i - 1) * (4 * xt(2*i, 2*j, t) + 2 * xt(2*i, 2*j + 1, t))...
-                + 2 * (2*i) * (4 * xt(2*i + 1, 2*j, t) + 2 * xt(2*i + 1, 2*j + 1, t));
+    Q = 0;
+    for i=1:N
+        for j=1:M
+            Q = Q + weights(i, j) * xt(i, j, t);
         end
-        Qt(t, 1) = 1 - (4*pi*R^2*h/(9*N^2*M) * Q);
     end
+    Q = 4*pi*R^2*h/(9*N^2*M) * Q;
+    Qt(t, 1) = 1 - Q;
 end
 
 plot(tarr, Qt);

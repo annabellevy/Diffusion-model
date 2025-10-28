@@ -1,4 +1,4 @@
-function xdot = cylinder_diff(t,x,D,R,h,N)
+function xdot = cylinder_diffv2(t,x,D,R,h,N)
 % Computes xdot given t, x, D, h, and N
 % Finite difference discretization 
 % of diffusion from a cylinder
