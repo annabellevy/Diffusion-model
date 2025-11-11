@@ -12,7 +12,7 @@ weights = zeros(N, 1);
 weights(1, 1) = 2;
 for i=1:N/2
     weights(2*i, 1) = 2;
-    weights(2*i + 1) = 4;
+    weights(2*i + 1, 1) = 4;
 end
 weights(N, 1) = 1;
 
@@ -30,7 +30,7 @@ C0 = 2*S*h/(N*3);
 c0=C0*ones(N,1);
 
 % Solve the ODE
-[tt,xt] = ode23s(@slab_diff,tarr,c0,[],D,h);
+[tt,xt] = ode23s(@slab_diff2,tarr,c0,[],D,h);
 tt=tt'; xt=xt';
 
 Qt = zeros(length(tarr), 1);

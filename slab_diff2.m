@@ -1,4 +1,4 @@
-function sdot=geldiff(t,v,D,h)
+function sdot=slab_diff2(t,v,D,h)
 % ODE file for diffusion out of a slab.
 % D - diffusivity h - half thickness
 % Method lines for the PDE dc/dt = D d^x/dx^2 
