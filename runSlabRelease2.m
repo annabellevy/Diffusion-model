@@ -8,13 +8,13 @@ tarr = [0:T/100:T];  % Array of time points in the interval 0 to T.
 
 
 % Weights for Simpson's rule
-weights = zeros(N, 1);
-weights(1, 1) = 2;
+weights = zeros(N+1, 1);
+weights(1, 1) = 1;
 for i=1:N/2
-    weights(2*i, 1) = 2;
-    weights(2*i + 1, 1) = 4;
+    weights(2*i, 1) = 4;
+    weights(2*i + 1, 1) = 2;
 end
-weights(N, 1) = 1;
+weights(N+1, 1) = 0;
 
 % Initial concentration is constant inside. 
 % Vector c0 = c0(1),c0(2),..,c0(N) 
@@ -43,9 +43,6 @@ for t=1:length(tarr)
     Qt(t) = 1 - Q;
 end
 
-Qrt = repmat(Qt', 11, 1);
 hold on;
-Qrt = Qrt';
-rarr = ones(11, 1)';
 
-surf(rarr, tarr, Qrt, 'EdgeColor', 'red', 'LineWidth', 2)
+plot(tarr, Qt, 'red', 'LineWidth', 2)
