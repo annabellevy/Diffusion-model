@@ -1,6 +1,6 @@
 % Run Slab Diffusion.
 h = 1/2;  % h is half thickness of the slab. 
-N = 100;  % Number of grid points. 500 is good. N must be even.
+N = 500;  % Number of grid points. 500 is good. N must be even.
 D = 1; % Diffusivity.
 T = 1; % Length of time interval.
 tarr = [0:T/100:T];  % Array of time points in the interval 0 to T.
@@ -26,7 +26,8 @@ S = 0;
 for i=1:N
     S = S + weights(i, 1) * 1;
 end
-C0 = 2*S*h/(N*3);
+S = 2*S*h/(N*3);
+C0 = 1/S;
 c0=C0*ones(N,1);
 
 % Solve the ODE
@@ -45,4 +46,4 @@ end
 
 hold on;
 
-plot(tarr, Qt, 'red', 'LineWidth', 2)
+plot(tarr, Qt, 'red', 'LineWidth', 1)
