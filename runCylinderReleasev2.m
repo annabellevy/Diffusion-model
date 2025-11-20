@@ -7,7 +7,6 @@ D = 1; % Diffusivity.
 T = 1;  % Length of time interval. 
 tarr = [0:T/100:T];  % Array of time points in the interval 0 to T.
                      % The default is equally spaced 101 points including 0 and T.
-rarr = [1:10];
 % Weights for Simpson's rule
 weights = zeros(M, N);
 n = N/2;
@@ -72,7 +71,6 @@ for r=1:10
         Q = 4*pi*r^2*h/(9*N^2*M) * Q;
         Qt(t, 1) = 1 - Q;
     end
-    Qrt = [Qrt, Qt(:)];
+    hold on;
+    plot(tarr, Qt)
 end
-
-surf(rarr, tarr, Qrt);
